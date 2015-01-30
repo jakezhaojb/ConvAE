@@ -8,16 +8,17 @@ require 'jz'
 
 -- This file involves all kinds of configurations!!!
 --
-cutorch.setDevice(1)
-debugFlag = true
+cutorch.setDevice(2)
+debugFlag = false
+torch.setdefaulttensortype('torch.FloatTensor')
 
 trSize = 60000 -- for MNIST
 if debugFlag then
-   trSize = 100
+   trSize = 10000
 end
 filterSize = 9
 nInplane = 1 -- MNIST
-nOutplane = 20
+nOutplane = 128
 poolSize = 2 
 l1weight = 0.01 -- To be tunned
 
@@ -27,7 +28,7 @@ path_to_testing = '/home/jz1672/Projects/what-where/TrAE/mnist/test_32x32.t7'
 optimState = {
    learningRate = 0.001,
    weightDecay = 0.0001,
-   momentum = 0,
-   learningRateDecay = 1e-7
+   momentum = 0.9,
+   learningRateDecay = 1e-2
 }
-batchSize = 16
+batchSize = 32
