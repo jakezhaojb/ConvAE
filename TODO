@@ -25,3 +25,11 @@ e.g, when batchSize = 64,
 
 Task:
 1. visualization codes
+2. Tied weight
+3. Norm convolution
+4. That error!!! See above.
+5. Save to same model..
+6. a.weight:copy(b.weight) -> sharing??
+7. The photo of the board, what Ross and Micheal write about.
+8. L1Penalty buggy.
+9. That fucking bug of cuda runtime...

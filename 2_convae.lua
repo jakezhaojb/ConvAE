@@ -5,29 +5,30 @@
 
 conv_autoencoder = function()
 
-   local pad2 = filterSize - 1
+   local pad1 = (filterSize - 1) / 2
 
    local encoder = nn.Sequential()
-   encoder:add(nn.SpatialPadding(pad2, pad2, pad2, pad2, 3, 4))
+   encoder:add(nn.SpatialPadding(pad1, pad1, pad1, pad1, 3, 4))
    encoder:add(nn.SpatialConvolutionFFT(nInplane, nOutplane, filterSize, filterSize))
    encoder:add(nn.ReLU())
 
    local decoder = nn.Sequential()
-   decoder:add(nn.SpatialPadding(pad2, pad2, pad2, pad2, 3, 4))
-   decoder:add(nn.SpatialConvolutionFFT(nOutplane, nInplane, filterSize, filterSize))
-   decoder:add(nn.ReLU())
+   decoder:add(nn.SpatialPadding(pad1, pad1, pad1, pad1, 3, 4))
+   decoder:add(nn.NormSpatialConvolutionFFT(nOutplane, nInplane, filterSize, filterSize))
 
    -- Tie the weights
    conv_filter = torch.rand(encoder:get(2).weight:size()):typeAs(encoder:get(2).weight)
-   encoder:get(2).weight = conv_filter
-   decoder:get(2).weight = conv_filter:transpose(1,2) -- TODO tied!!!
+   --encoder:get(2).weight = conv_filter
+   --decoder:get(2).weight = conv_filter:transpose(1,2) -- TODO tied!!!
 
    -- Remark: no need to flip the weights
 
    local conv_ae = nn.Sequential()
    conv_ae:add(encoder)
-   conv_ae:add(jz.SpatialMaxPoolingPos(poolSize, poolSize))
-   conv_ae:add(jz.SpatialMaxUnpoolingPos(poolSize, poolSize))
+   if maxPoolFlag then
+      conv_ae:add(jz.SpatialMaxPoolingPos(poolSize, poolSize))
+      conv_ae:add(jz.SpatialMaxUnpoolingPos(poolSize, poolSize))
+   end
    conv_ae:add(nn.L1Penalty(l1weight))
    conv_ae:add(decoder)
 

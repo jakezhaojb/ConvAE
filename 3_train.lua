@@ -43,10 +43,12 @@ function train()
                        end
                        gradParameters:zero()
                        local f = 0
+                       local Nf = 0  -- normalized error
                        for i = 1,#inputs do
-                          -- estimate f
                           local output = model:forward(inputs[i])
                           local err = criterion:forward(output, targets[i])
+                          Nf = Nf + math.sqrt(err)/targets[i]:norm()
+                          --print(output:max())  -- Good point for DEBUGING.
                           f = f + err
                           -- estimate df/dW
                           local df_do = criterion:backward(output, targets[i])
@@ -55,7 +57,8 @@ function train()
                        -- normalize gradients and f(X)
                        gradParameters:div(#inputs)
                        f = f/#inputs
-                       print("--- cost: " .. f)
+                       Nf = Nf/#inputs
+                       print(string.format("Nerr: %.2f, ", Nf) .. string.format("Err: %.2f", f))
 
                        -- return f and df/dX
                        return f,gradParameters
@@ -68,10 +71,14 @@ function train()
    time = sys.clock() - time
    time = time / trSize
    print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
-   local filename = paths.concat('./Results', 'model.net')
-   os.execute('mkdir -p ' .. sys.dirname(filename))
-   print('==> saving model to '..filename)
-   torch.save(filename, model)
+   -- model saving
+   if epoch % 10 == 0 then
+      local filename = paths.concat('./Results', 'model_net')
+      filename = (filename .. '_L1_' .. l1weight .. '_Lrate_' .. optimState.learningRate .. '_LrateD_' .. optimState.learningRateDecay .. '_nLayer_' .. #model.modules)
+      os.execute('mkdir -p ' .. sys.dirname(filename))
+      print('==> saving model to '..filename)
+      torch.save(filename, model)
+   end
 
    epoch = epoch + 1
 end
