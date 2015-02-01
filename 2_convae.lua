@@ -26,8 +26,9 @@ conv_autoencoder = function()
    local conv_ae = nn.Sequential()
    conv_ae:add(encoder)
    if maxPoolFlag then
-      conv_ae:add(jz.SpatialMaxPoolingPos(poolSize, poolSize))
-      conv_ae:add(jz.SpatialMaxUnpoolingPos(poolSize, poolSize))
+      --conv_ae:add(jz.SpatialMaxPoolingPos(poolSize, poolSize))
+      --conv_ae:add(jz.SpatialMaxUnpoolingPos(poolSize, poolSize))
+      conv_ae:add(nn.MaxPoolUnpool(poolSize, poolSize))
    end
    conv_ae:add(nn.L1Penalty(l1weight))
    conv_ae:add(decoder)

@@ -74,7 +74,7 @@ function train()
    -- model saving
    if epoch % 10 == 0 then
       local filename = paths.concat('./Results', 'model_net')
-      filename = (filename .. '_L1_' .. l1weight .. '_Lrate_' .. optimState.learningRate .. '_LrateD_' .. optimState.learningRateDecay .. '_nLayer_' .. #model.modules)
+      filename = (filename .. '_L1_' .. l1weight .. '_Lrate_' .. optimState.learningRate .. '_LrateD_' .. optimState.learningRateDecay .. '_nLayer_' .. #model.modules .. '_maxPool_' .. maxPoolFlag)
       os.execute('mkdir -p ' .. sys.dirname(filename))
       print('==> saving model to '..filename)
       torch.save(filename, model)
