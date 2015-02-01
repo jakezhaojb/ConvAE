@@ -16,16 +16,17 @@ conv_autoencoder = function()
    decoder:add(nn.SpatialPadding(pad1, pad1, pad1, pad1, 3, 4))
    decoder:add(nn.NormSpatialConvolutionFFT(nOutplane, nInplane, filterSize, filterSize))
 
-   -- Tie the weights
-   conv_filter = torch.rand(encoder:get(2).weight:size()):typeAs(encoder:get(2).weight)
-   --encoder:get(2).weight = conv_filter
-   --decoder:get(2).weight = conv_filter:transpose(1,2) -- TODO tied!!!
+   if paraTied then
+      decoder:get(2).weight = encoder:get(2).weight:transpose(1,2)
+      decoder:get(2).gradWeight = encoder:get(2).gradWeight:transpose(1,2)
+   end
 
    -- Remark: no need to flip the weights
 
    local conv_ae = nn.Sequential()
    conv_ae:add(encoder)
    if maxPoolFlag then
+      -- TODO debug on this.
       --conv_ae:add(jz.SpatialMaxPoolingPos(poolSize, poolSize))
       --conv_ae:add(jz.SpatialMaxUnpoolingPos(poolSize, poolSize))
       conv_ae:add(nn.MaxPoolUnpool(poolSize, poolSize))

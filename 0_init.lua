@@ -35,3 +35,4 @@ batchSize = 256
 
 dofile("./Modules/init.lua")
 maxPoolFlag = true
+paraTied = true
