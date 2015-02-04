@@ -8,7 +8,7 @@ require 'jz'
 
 -- This file involves all kinds of configurations!!!
 --
-cutorch.setDevice(2)
+cutorch.setDevice(1)
 debugFlag = false
 torch.setdefaulttensortype('torch.FloatTensor')
 
@@ -19,8 +19,8 @@ end
 filterSize = 9
 nInplane = 1 -- MNIST
 nOutplane = 64
-poolSize = 2 
-l1weight = 0.1 -- To be tunned
+poolSize = 8
+l1weight = 1 -- To be tunned
 
 path_to_training = '/home/jz1672/Projects/what-where/TrAE/mnist/train_32x32.t7'
 path_to_testing = '/home/jz1672/Projects/what-where/TrAE/mnist/test_32x32.t7'

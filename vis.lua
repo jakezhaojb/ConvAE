@@ -1,6 +1,9 @@
 dofile("0_init.lua")
 
 normalize_weight = function(nn_module, convFlag)
+   if convFlag == nil then
+      convFlag = true
+   end
    local w = nn_module.weight:clone():type('torch.FloatTensor')
    if not convFlag then
       -- F.C
@@ -111,5 +114,5 @@ visualize_output = function(output_table)
 end
 
 
---visualize_weight(form_weight_table('./Results'))
+visualize_weight(form_weight_table('./Results'))
 visualize_output(form_output_table(form_model_table('./Results')))

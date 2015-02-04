@@ -72,9 +72,9 @@ function train()
    time = time / trSize
    print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
    -- model saving
-   if epoch % 10 == 0 then
+   if epoch % 5 == 0 then
       local filename = paths.concat('./Results', 'model_net')
-      filename = (filename .. '_L1_' .. l1weight .. '_Lrate_' .. optimState.learningRate .. '_LrateD_' .. optimState.learningRateDecay .. '_nLayer_' .. #model.modules .. '_maxPool_' .. tostring(maxPoolFlag) .. '_paraTied_' .. tostring(paraTied))
+      filename = (filename .. '_epoch_' .. epoch .. '_L1_' .. l1weight .. '_Lrate_' .. optimState.learningRate .. '_nLayer_' .. #model.modules .. '_maxPool_' .. tostring(maxPoolFlag) .. '_poolSize_' .. poolSize .. '_paraTied_' .. tostring(paraTied) .. '_nOutplane_' .. nOutplane)
       os.execute('mkdir -p ' .. sys.dirname(filename))
       print('==> saving model to '..filename)
       torch.save(filename, model)
