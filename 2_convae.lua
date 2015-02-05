@@ -44,5 +44,11 @@ conv_autoencoder = function()
 
 end
 
+
+stack_conv_autoencoder = function()
+   -- TODO
+end
+
+
 model, criterion = conv_autoencoder()
 
