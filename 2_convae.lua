@@ -21,6 +21,11 @@ conv_autoencoder = function()
       decoder:get(2).gradWeight = encoder:get(2).gradWeight:transpose(1,2)
    end
 
+   if init_scale_down ~= nil then
+      print "==> scaling down the initialized weights."
+      decoder:get(2).weight:mul(init_scale_down)
+   end
+
    -- Remark: no need to flip the weights
 
    local conv_ae = nn.Sequential()

@@ -19,9 +19,10 @@ if debugFlag then
 end
 
 filterSize = 9
-nOutplane = 128
-poolSize = 8
-l1weight = 1 -- To be tunned
+nOutplane = 32
+poolSize = 4
+l1weight = 0 -- To be tunned
+init_scale_down = 0.01
 
 optimState = {
    learningRate = 0.0005,

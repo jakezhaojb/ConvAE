@@ -70,10 +70,17 @@ end
 
 form_output_table = function(model_table)
    local outputTb = {}
-   local test_loaded = torch.load(path_to_testing, 'ascii')
-   local images = test_loaded.data:clone()
-   images = images:type('torch.FloatTensor')
-   images:div(255)
+   if dataset == 'mnist' then
+      local test_loaded = torch.load(path_to_testing, 'ascii')
+      images = test_loaded.data:clone()
+      images = images:type('torch.FloatTensor')
+      images:div(255)
+   elseif dataset == 'cifar' then
+      local test_loaded = torch.load(path_to_testing)
+      images = test_loaded.datacn:float():reshape(test_loaded.datacn:size(1), 3, 32, 32)
+   else
+      print 'No'
+   end
    local teSize = images:size(1)
    local shuffle = torch.randperm(teSize)[{{1,49}}]
    imagesElem = torch.Tensor():resize(49, images:size(2), images:size(3), images:size(4)):typeAs(images)
