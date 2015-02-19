@@ -41,12 +41,13 @@ end
 
 form_weight_table = function(dirname)
    local wTb = {}
-   p = io.popen('find ' .. dirname .. ' -maxdepth 1 -type f')
+   p = io.popen('find -L ' .. dirname .. ' -maxdepth 1 -type f')
    for fl in p:lines() do
       if string.begins(fl, './Results/model_net') then
          -- It is a model file
          ml = torch.load(fl)
-         wTb[fl] = normalize_weight(ml:get(1):get(2), true)
+         wTb[fl .. '_encoder'] = normalize_weight(ml:get(1):get(2), true)
+         wTb[fl .. '_decoder'] = normalize_weight(ml:get(5):get(2), true)
       end
    end
    return wTb
@@ -55,7 +56,7 @@ end
 
 form_model_table = function(dirname)
    local modelTb = {}
-   p = io.popen('find ' .. dirname .. ' -maxdepth 1 -type f')
+   p = io.popen('find -L ' .. dirname .. ' -maxdepth 1 -type f')
    for fl in p:lines() do
       if string.begins(fl, './Results/model_net') then
          -- It is a model file

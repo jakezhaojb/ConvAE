@@ -38,13 +38,13 @@ paraTied = true
 
 if dataset == 'mnist' then
    nInplane = 1
-   path_to_training = '/home/jz1672/Projects/what-where/TrAE/mnist/train_32x32.t7'
-   path_to_testing = '/home/jz1672/Projects/what-where/TrAE/mnist/test_32x32.t7'
+   path_to_training = '/misc/vlgscratch3/LecunGroup/jakezhao/Data/mnist/train_32x32.t7'
+   path_to_testing = '/misc/vlgscratch3/LecunGroup/jakezhao/Data/mnist/test_32x32.t7'
 
 elseif dataset == 'cifar' then
    nInplane = 3
-   path_to_training = '/home/jz1672/Data/cifar_train.t7'
-   path_to_testing = '/home/jz1672/Data/cifar_test.t7'
+   path_to_training = '/misc/vlgscratch3/LecunGroup/jakezhao/Data/cifar/CIFAR_CN_train.t7'
+   path_to_testing = '/misc/vlgscratch3/LecunGroup/jakezhao/Data/cifar/CIFAR_CN_test.t7'
 else
    print("No dataset is found.")
    sys.exit()
