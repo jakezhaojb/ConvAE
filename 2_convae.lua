@@ -9,12 +9,15 @@ conv_autoencoder = function()
 
    local encoder = nn.Sequential()
    encoder:add(nn.SpatialPadding(pad1, pad1, pad1, pad1, 3, 4))
-   encoder:add(nn.SpatialConvolutionFFT(nInplane, nOutplane, filterSize, filterSize))
-   encoder:add(nn.ReLU())
+   --encoder:add(nn.SpatialConvolutionFFT(nInplane, nOutplane, filterSize, filterSize))
+   encoder:add(cudnn.SpatialConvolution(nInplane, nOutplane, filterSize, filterSize))
+   encoder:add(cudnn.ReLU())
 
    local decoder = nn.Sequential()
    decoder:add(nn.SpatialPadding(pad1, pad1, pad1, pad1, 3, 4))
-   decoder:add(nn.NormSpatialConvolutionFFT(nOutplane, nInplane, filterSize, filterSize))
+   --decoder:add(nn.NormSpatialConvolutionFFT(nOutplane, nInplane, filterSize, filterSize))
+   -- TODO
+   decoder:add(cudnn.NormSpatialConvolution(nOutplane, nInplane, filterSize, filterSize))
 
    if paraTied then
       decoder:get(2).weight = encoder:get(2).weight:transpose(1,2)
@@ -30,12 +33,19 @@ conv_autoencoder = function()
 
    local conv_ae = nn.Sequential()
    conv_ae:add(encoder)
-   if maxPoolFlag then
-      -- TODO debug on this.
-      --conv_ae:add(jz.SpatialMaxPoolingPos(poolSize, poolSize))
-      --conv_ae:add(jz.SpatialMaxUnpoolingPos(poolSize, poolSize))
-      conv_ae:add(nn.MaxPoolUnpool(poolSize, poolSize))
-   end
+
+   -- Pool
+   -- jz module max Pooling and Unpooling
+   --conv_ae:add(jz.SpatialMaxPoolingPos(poolSize, poolSize))
+   --conv_ae:add(jz.SpatialMaxUnpoolingPos(poolSize, poolSize))
+
+   -- Using Upsampling MaxPooling and Unpooling
+   --conv_ae:add(nn.MaxPoolUnpool(poolSize, poolSize))
+
+   -- myaenn
+   conv_ae:add(nn.SoftPooling2D({poolSize, poolSize}, poolBeta))
+   conv_ae:add(nn.SoftUnpooling2D({poolSize, poolSize}))
+
    conv_ae:add(nn.L1Penalty(l1weight))
    conv_ae:add(decoder)
 
@@ -56,4 +66,3 @@ end
 
 
 model, criterion = conv_autoencoder()
-

@@ -1,14 +1,16 @@
-require 'cutorch'
-require 'cunn'
+--require 'cutorch'
+--require 'cunn'
+require 'myaenn'
+require 'fbcunn'
+require 'cudnn'
 require 'nnx'
-require 'FFTconv'
 require 'xlua'
 require 'optim'
-require 'jz'
+--require 'jz'
 
 -- This file involves all kinds of configurations!!!
 --
-cutorch.setDevice(2)
+cutorch.setDevice(1)
 debugFlag = false
 torch.setdefaulttensortype('torch.FloatTensor')
 
@@ -19,10 +21,10 @@ if debugFlag then
 end
 
 filterSize = 9
-nOutplane = 32
-poolSize = 4
-l1weight = 0 -- To be tunned
-init_scale_down = 0.01
+nOutplane = 16
+poolSize = 8
+l1weight = 1 -- To be tunned
+init_scale_down = 1
 
 optimState = {
    learningRate = 0.0005,
@@ -52,3 +54,5 @@ end
 
 stackFlag = true
 -- TODO
+
+poolBeta = 0.1

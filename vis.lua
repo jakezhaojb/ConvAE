@@ -71,6 +71,9 @@ end
 
 form_output_table = function(model_table)
    local outputTb = {}
+   local criterion = nn.MSECriterion()
+   criterion.sizeAverage = false
+   criterion:cuda()
    if dataset == 'mnist' then
       local test_loaded = torch.load(path_to_testing, 'ascii')
       images = test_loaded.data:clone()
@@ -92,10 +95,28 @@ form_output_table = function(model_table)
    imagesElem = nil
    collectgarbage()
    -- produce the output
+   -- testing error and Nerr
+   local file_test_error = io.open('./Results/test_error.csv', 'w')
    for k, model in pairs(model_table) do
       model:cuda()
       outputTb[k] = model:forward(images:cuda()):type('torch.FloatTensor')
+      local Nf = 0
+      local f = 0
+      for i = 1, 49 do
+         local input = images[i]:float():reshape(1, images:size(2), images:size(3), images:size(4)):cuda()
+         local output = model:forward(input)
+         local err = criterion:forward(output, input)
+         Nf = Nf + math.sqrt(err)/input:norm()
+         f = f + err
+      end
+      -- err
+      f = f / 49
+      Nf = Nf / 49
+      local f_str = string.format('%.2f', f)
+      local Nf_str = string.format('%.2f', Nf)
+      file_test_error:write(k .. ' : ' .. Nf_str .. ',' .. f_str .. '\n')
    end
+   file_test_error:close()
    return outputTb
 end
 
